@@ -1,0 +1,145 @@
+#include <iostream>
+#include <cstring>
+using namespace std;
+template <class T, class K>
+class node
+{
+public:
+    T key;
+    K value;
+};
+template <class J, class L>
+class hashe
+{
+    node<J, L> **base;
+    int capacity;
+    int height;
+
+public:
+    hashe()
+    {
+        height = -1;
+        cout << "Enter the capacity of table ";
+        cin >> capacity;
+        base = new node<J, L> *[capacity];
+        for (int i = 0; i < capacity; i++)
+        {
+            base[i] = nullptr;
+        }
+    }
+    ~hashe()
+    {
+        for (int i = 0; i < capacity; i++)
+        {
+            delete base[i];
+        }
+        delete[] base;
+    }
+    void insert(J s, L data)
+    {
+        if (height < (capacity - 1))
+        {
+            int x = 0;
+            for (char c : s)
+            {
+                x += int(c);
+            }
+            x = x % capacity;
+            int counter = capacity - 1;
+            while (base[x] != nullptr || counter > -1)
+            {
+                x = (x + 1) % capacity;
+                counter--;
+            }
+            if (base[x] == nullptr)
+            {
+                base[x] = new node<J, L>;
+                base[x]->key = s;
+                base[x]->value = data;
+                height++;
+            }
+        }
+        else
+        {
+            cout << "Table full reinitalize table ";
+        }
+    }
+    void traverse()
+    {
+        for (int i = 0; i < capacity; i++)
+        {
+            if (base[i] != nullptr)
+            {
+                cout << "\n Key " << ((base[i]->key)) << " have value " << (base[i]->value);
+            }
+        }
+    }
+    bool deleteion(J key, L data)
+    {
+        int x = 0;
+        for (char c : key)
+        {
+            x += int(c);
+        }
+        x %= capacity;
+        int counter = capacity - 1;
+        while ((base[x] != nullptr) && ((base[x]->value != data) && (counter > -1)))
+        {
+            cout << "j";
+            x = (x + 1) % capacity;
+            counter--;
+        }
+        if (base[x]->value == data)
+        {
+            base[x] = nullptr;
+            height--;
+            return 1;
+        }
+        else
+        {
+            return 0;
+        }
+    }
+    L search(J key)
+    {
+        int x = 0;
+        for (char c : key)
+        {
+            x += int(c);
+        }
+        x %= capacity;
+        int counter = capacity - 1;
+        while ((base[x] != nullptr) && (base[x]->key != key) && (counter > -1))
+        {
+            x = (x + 1) % capacity;
+            counter--;
+        }
+        if (base[x] != nullptr && base[x]->key == key)
+        {
+            return base[x]->value;
+        }
+        else
+        {
+            return -1;
+        }
+    }
+};
+int main()
+{
+    hashe<string, int> h1;
+    // inserting element is hash table
+    h1.insert("hi", 5);
+    h1.insert("hey", 1);
+    h1.insert("dw", 2);
+    h1.insert("2", 1);
+    h1.insert("3", 1);
+    // traversing the hash table
+    h1.traverse();
+    // deleting element
+    h1.deleteion("3", 1);
+    // traversing after deletion
+    h1.traverse();
+    int x = h1.search("hey");
+    (x <= (-1)) ? cout << "Not exists" : cout << x << " is data crosspond to your key";
+    return 0;
+}
